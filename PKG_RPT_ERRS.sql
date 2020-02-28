@@ -5,9 +5,9 @@ CREATE OR REPLACE PACKAGE                   PKG_RPT_ERRS is
   -- Subir 5  
      
   TYPE Tr_Columnas_ValError IS RECORD(
-    tipoerror           NVARCHAR2(15),
+    tipoerror           NVARCHAR2(15) ,
     descerror           NVARCHAR2(150),
-    alimentadorid       NVARCHAR2(10),
+    alimentadorid       NVARCHAR2(10) ,
     descalimentador     NVARCHAR2(20),
     elemento            VARCHAR2(30) ,
     objectid            INTEGER ,
