@@ -2,7 +2,7 @@ CREATE OR REPLACE PACKAGE                   PKG_RPT_ERRS is
  
   -- Author  : SCASTILLO 
   -- Created : 04/02/2015
-  -- Subir 4  
+  -- Subir 5  
      
   TYPE Tr_Columnas_ValError IS RECORD(
     tipoerror           NVARCHAR2(15),
@@ -22,12 +22,12 @@ CREATE OR REPLACE PACKAGE                   PKG_RPT_ERRS is
  
   TYPE Gr_ValidaError IS TABLE OF Tr_Columnas_ValError INDEX BY BINARY_INTEGER;
 
-  --Definición de Variables
+  --DefiniciÃ³n de Variables
   Gv_DescERROR      VALIDAERROR.DESCERROR%TYPE;
   Gv_Error          VARCHAR2(2000);
 
 
-  --Definición de Procedimientos
+  --DefiniciÃ³n de Procedimientos
   PROCEDURE P_V_FechaProceso(Fecha  OUT date);
 
   PROCEDURE P_V_DatosErrores (Pr_Seleccionados OUT PKG_RPT_ERRS.Gr_ValidaError,
@@ -63,12 +63,12 @@ CREATE OR REPLACE PACKAGE                   PKG_RPT_ERRS is
 
   PROCEDURE P_V_CA_PotenciaUnidadyPuesto;
 
-  --Tramos Distribución Aereo y Subterráneo
+  --Tramos DistribuciÃ³n Aereo y SubterrÃ¡neo
   PROCEDURE P_V_TM_ConductorConfySecFase;
 
   PROCEDURE P_V_TM_ConductorFaseyVoltaje;
  
-  --Puesto de Protección Dinámico
+  --Puesto de ProtecciÃ³n DinÃ¡mico
   PROCEDURE P_V_PD_CorrienteFaseyVoltaje;
 
   --Puesto Transformador
@@ -202,7 +202,7 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
     -- Eliminar datos procesados anteriomente
     P_EliminaDatosTablaError;
 
-    -- Validación de proceso de compresión
+    -- ValidaciÃ³n de proceso de compresiÃ³n
     n_regs_sesion := 1;
     n_regs_sesion := FUNC_VERIFICA_ESTADO_0('SIGELEC');
     /*
@@ -212,7 +212,7 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
     CLOSE C_States;
     */
     IF (Ln_Registros <> 0) THEN
-       Lv_Error := 'No se ha realizado el proceso de Compresión';
+       Lv_Error := 'No se ha realizado el proceso de CompresiÃ³n';
        RAISE Le_Error;
     END IF;
     
@@ -239,12 +239,12 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
     P_V_CA_FaseConexionyUnidad;
     P_V_CA_PotenciaUnidadyPuesto;
 
-    -- Tramos Distribución Aereo y Subterráneo
+    -- Tramos DistribuciÃ³n Aereo y SubterrÃ¡neo
     dbms_output.put_line ('Validaciones aplicadas a Tramo Media');
     P_V_TM_ConductorConfySecFase;
     P_V_TM_ConductorFaseyVoltaje;
 
-    -- Puesto de Protección Dinámico
+    -- Puesto de ProtecciÃ³n DinÃ¡mico
     dbms_output.put_line ('Validaciones aplicadas a Proteccion Dinamico');
     P_V_PD_CorrienteFaseyVoltaje;
 
@@ -298,7 +298,7 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
   -----
   BEGIN
   ----- 
-    -- Registro de cuando inició el proceso 
+    -- Registro de cuando iniciÃ³ el proceso 
     Gv_DescERROR:= 'Inicio de Proceso';
     
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro) 
@@ -329,7 +329,7 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
   -----
   BEGIN    
   -----
-    -- Registro de cuando finalizó el proceso 
+    -- Registro de cuando finalizÃ³ el proceso 
     
     Gv_DescERROR:= 'Fin de Proceso';
     
@@ -379,16 +379,16 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
                   tda.objectid,
                   tda.alimentadorid,
                   CASE
-                    WHEN tda.FaseConexion IN (1,2,4) THEN 1 -- Monofásico
-                    WHEN tda.FaseConexion IN (3,5,6) THEN 2 -- Bifásico
-                    WHEN tda.FaseConexion = 7 then 3        -- Trifásico
+                    WHEN tda.FaseConexion IN (1,2,4) THEN 1 -- MonofÃ¡sico
+                    WHEN tda.FaseConexion IN (3,5,6) THEN 2 -- BifÃ¡sico
+                    WHEN tda.FaseConexion = 7 then 3        -- TrifÃ¡sico
                     ELSE 0
                   END CantFase,
                   tda.faseconexion,
                   CASE
-                    WHEN tda.subtipo IN (1,4) THEN 1        -- Tramo y Bajante Monofásico
-                    WHEN tda.subtipo IN (2,5) THEN 2        -- Tramo y Bajante Bifásico
-                    WHEN tda.subtipo IN (3,6) THEN 3        -- Tramo y Bajante Trifásico
+                    WHEN tda.subtipo IN (1,4) THEN 1        -- Tramo y Bajante MonofÃ¡sico
+                    WHEN tda.subtipo IN (2,5) THEN 2        -- Tramo y Bajante BifÃ¡sico
+                    WHEN tda.subtipo IN (3,6) THEN 3        -- Tramo y Bajante TrifÃ¡sico
                   END CantFasexSubtipo,
                   tda.usuarioregistro usr_registro,
                   tda.fecharegistro   fec_registro,
@@ -403,16 +403,16 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
                   tds.objectid,
                   tds.alimentadorid,
                   CASE
-                    WHEN tds.FaseConexion in (1,2,4) then 1 -- Monofásico
-                    WHEN tds.FaseConexion in (3,5,6) then 2 -- Bifásico
-                    WHEN tds.FaseConexion = 7 then 3        -- Trifásico
+                    WHEN tds.FaseConexion in (1,2,4) then 1 -- MonofÃ¡sico
+                    WHEN tds.FaseConexion in (3,5,6) then 2 -- BifÃ¡sico
+                    WHEN tds.FaseConexion = 7 then 3        -- TrifÃ¡sico
                     ELSE 0
                   END CantFase,
                   tds.faseconexion,
                   CASE
-                    WHEN tds.subtipo in (1,4) then 1        -- Tramo y Bajante Monofásico
-                    WHEN tds.subtipo in (2,5) then 2        -- Tramo y Bajante Bifásico
-                    WHEN tds.subtipo in (3,6) then 3        -- Tramo y Bajante Trifásico
+                    WHEN tds.subtipo in (1,4) then 1        -- Tramo y Bajante MonofÃ¡sico
+                    WHEN tds.subtipo in (2,5) then 2        -- Tramo y Bajante BifÃ¡sico
+                    WHEN tds.subtipo in (3,6) then 3        -- Tramo y Bajante TrifÃ¡sico
                   END CantFasexSubtipo,
                   tds.usuarioregistro usr_registro,
                   tds.fecharegistro   fec_registro,
@@ -427,16 +427,16 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
                   tba.objectid,
                   tba.alimentadorid,
                   CASE
-                    WHEN tba.FaseConexion in (1,2,4) then 1 -- Monofásico
-                    WHEN tba.FaseConexion in (3,5,6) then 2 -- Bifásico
-                    WHEN tba.FaseConexion = 7 then 3        -- Trifásico
+                    WHEN tba.FaseConexion in (1,2,4) then 1 -- MonofÃ¡sico
+                    WHEN tba.FaseConexion in (3,5,6) then 2 -- BifÃ¡sico
+                    WHEN tba.FaseConexion = 7 then 3        -- TrifÃ¡sico
                     ELSE 0
                   END CantFase,
                   tba.faseconexion,
                   CASE
-                    WHEN tba.subtipo in (1,4,7) then 1      -- Tramo, Bajante y Acometida Monofásico
-                    WHEN tba.subtipo in (2,5,8) then 2      -- Tramo, Bajante y Acometida Bifásico
-                    WHEN tba.subtipo in (3,6,9) then 3      -- Tramo, Bajante y Acometida Trifásico
+                    WHEN tba.subtipo in (1,4,7) then 1      -- Tramo, Bajante y Acometida MonofÃ¡sico
+                    WHEN tba.subtipo in (2,5,8) then 2      -- Tramo, Bajante y Acometida BifÃ¡sico
+                    WHEN tba.subtipo in (3,6,9) then 3      -- Tramo, Bajante y Acometida TrifÃ¡sico
                   END CantFasexSubtipo,
                   tba.usuarioregistro             usr_registro,
                   tba.fecharegistro               fec_registro,
@@ -452,16 +452,16 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
                   tbs.objectid,
                   tbs.alimentadorid,
                   CASE
-                    WHEN tbs.FaseConexion in (1,2,4) then 1 -- Monofásico
-                    WHEN tbs.FaseConexion in (3,5,6) then 2 -- Bifásico
-                    WHEN tbs.FaseConexion = 7 then 3        -- Trifásico
+                    WHEN tbs.FaseConexion in (1,2,4) then 1 -- MonofÃ¡sico
+                    WHEN tbs.FaseConexion in (3,5,6) then 2 -- BifÃ¡sico
+                    WHEN tbs.FaseConexion = 7 then 3        -- TrifÃ¡sico
                     ELSE 0
                   END CantFase,
                   tbs.faseconexion,
                   CASE
-                    WHEN tbs.subtipo in (1,4,7) then 1      -- Tramo, Bajante y Acometida Monofásico
-                    WHEN tbs.subtipo in (2,5,8) then 2      -- Tramo, Bajante y Acometida Bifásico
-                    WHEN tbs.subtipo in (3,6,9) then 3      -- Tramo, Bajante y Acometida Trifásico
+                    WHEN tbs.subtipo in (1,4,7) then 1      -- Tramo, Bajante y Acometida MonofÃ¡sico
+                    WHEN tbs.subtipo in (2,5,8) then 2      -- Tramo, Bajante y Acometida BifÃ¡sico
+                    WHEN tbs.subtipo in (3,6,9) then 3      -- Tramo, Bajante y Acometida TrifÃ¡sico
                     END CantFasexSubtipo,
                   tbs.usuarioregistro             usr_registro,
                   tbs.fecharegistro               fec_registro,
@@ -476,16 +476,16 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
                   pt.objectid,
                   pt.alimentadorid,
                   CASE
-                    WHEN pt.FaseConexion in (1,2,4) then 1  --Monofásico
-                    WHEN pt.FaseConexion in (3,5,6) then 2  --Bifásico
-                    WHEN pt.FaseConexion = 7 then 3         --Trifásico
+                    WHEN pt.FaseConexion in (1,2,4) then 1  --MonofÃ¡sico
+                    WHEN pt.FaseConexion in (3,5,6) then 2  --BifÃ¡sico
+                    WHEN pt.FaseConexion = 7 then 3         --TrifÃ¡sico
                     ELSE 0
                   END CantFase,
                   pt.faseconexion,
                   CASE
-                    WHEN pt.subtipo in (1,2,3,4) then 1       --Monofásicos
-                    WHEN pt.subtipo in (13,9,10) then 2       --Bifásicos y Banco de 2 Transformadores
-                    WHEN pt.subtipo in (5,6,7,8,11,12) then 3 --Trifásicos y Banco de 3 Transformadores
+                    WHEN pt.subtipo in (1,2,3,4) then 1       --MonofÃ¡sicos
+                    WHEN pt.subtipo in (13,9,10) then 2       --BifÃ¡sicos y Banco de 2 Transformadores
+                    WHEN pt.subtipo in (5,6,7,8,11,12) then 3 --TrifÃ¡sicos y Banco de 3 Transformadores
                   END CantFasexSubtipo,
                   pt.usuarioregistro              usr_registro,
                   pt.fecharegistro                fec_registro,
@@ -622,7 +622,7 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
   BEGIN
     -- Fase de conexion diferente a la fase del Transformador asociado (Punto Carga  y Luminaria)
 
-    Gv_DescERROR:= 'Fase de Conexión del Feature con el Trafo relacionado';
+    Gv_DescERROR:= 'Fase de ConexiÃ³n del Feature con el Trafo relacionado';
 
     FOR Lc_Datos IN C_Datos LOOP
       BEGIN
@@ -695,7 +695,7 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
           
               UNION ALL
           
-              SELECT 'Tramo Distribución Aereo' Elemento,
+              SELECT 'Tramo DistribuciÃ³n Aereo' Elemento,
                       b.objectid,
                       b.alimentadorid,
                       GET_DESCRIPCION_ALIMENTADOR(b.alimentadorid) DescAlimentador,
@@ -710,7 +710,7 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
                 
               UNION ALL
           
-              SELECT 'Tramo Distribución Subterraneo' Elemento,
+              SELECT 'Tramo DistribuciÃ³n Subterraneo' Elemento,
                       b.objectid,
                       b.alimentadorid,
                       GET_DESCRIPCION_ALIMENTADOR(b.alimentadorid) DescAlimentador,
@@ -789,15 +789,15 @@ CREATE OR REPLACE PACKAGE BODY                            PKG_RPT_ERRS is
   -----
   BEGIN
   -----
-    -- Error en la Configuración de la Fase y otros
+    -- Error en la ConfiguraciÃ³n de la Fase y otros
     ---- Dominio FaseConexion  A=4, B=2, C=1, AC=5, AB=6, BC=3 y ABC = 7
-    ----  Si la Fase es “A” el campo alimentador info debe ser “1”
-    ----  Si la Fase es “B” el campo alimentador info debe ser “2”
-    ----  Si la Fase es “C” el campo alimentador info debe ser “4”
-    ----  Si la Fase es “AB” el campo alimentador info debe ser “3”
-    ----  Si la Fase es “BC” el campo alimentador info debe ser “6”
-    ----  Si la Fase es “AC” el campo alimentador info debe ser “5”
-    ----  Si la Fase es “ABC” el campo alimentador info debe ser “7”
+    ----  Si la Fase es Â“AÂ” el campo alimentador info debe ser Â“1Â”
+    ----  Si la Fase es Â“BÂ” el campo alimentador info debe ser Â“2Â”
+    ----  Si la Fase es Â“CÂ” el campo alimentador info debe ser Â“4Â”
+    ----  Si la Fase es Â“ABÂ” el campo alimentador info debe ser Â“3Â”
+    ----  Si la Fase es Â“BCÂ” el campo alimentador info debe ser Â“6Â”
+    ----  Si la Fase es Â“ACÂ” el campo alimentador info debe ser Â“5Â”
+    ----  Si la Fase es Â“ABCÂ” el campo alimentador info debe ser Â“7Â”
 
     Gv_DescERROR:= 'Errores del Feeder INFO y Lado Baja TR';
 
@@ -926,7 +926,7 @@ PROCEDURE P_V_BTconParentCSDisyuntor IS
 
 
   BEGIN
-    --Validación Elementos de BT con ParentCircuitSource del Disyuntor
+    --ValidaciÃ³n Elementos de BT con ParentCircuitSource del Disyuntor
     Gv_DescERROR:= 'Elementos de BT que tienen el ParentCircuitSource del Disyuntor y no el de un Transformador';
 
     FOR Lc_Datos IN C_Datos LOOP
@@ -954,7 +954,7 @@ PROCEDURE P_V_BTconParentCSDisyuntor IS
 --Validaciones especificas para cada elemento
 PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
   BEGIN
-    --Validación de la fase de conexion, voltaje, codigo de estructura y corriente
+    --ValidaciÃ³n de la fase de conexion, voltaje, codigo de estructura y corriente
 
     Gv_DescERROR:= 'Fase de conexion, Voltaje, Codigo de Estructura y Corriente';
 
@@ -976,13 +976,13 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
           select G.objectid,
                  G.alimentadorid,
                  G.DescAlimentador,
-                 case when G.CantFase = '1' and G.Voltaje <> 7960 then 'Voltaje incorrecto es Monofásico'
-                      when G.CantFase in ('2','3') and G.Voltaje <> 13800 then 'Voltaje incorrecto es Bifásico o Trifásico'
+                 case when G.CantFase = '1' and G.Voltaje <> 7960 then 'Voltaje incorrecto es MonofÃ¡sico'
+                      when G.CantFase in ('2','3') and G.Voltaje <> 13800 then 'Voltaje incorrecto es BifÃ¡sico o TrifÃ¡sico'
                       else null
                  end FaseyVoltaje,
-                 case when G.CantFase = '1' and G.CantFaseCodEstructura <> '1' then 'Codigo estructura incorrecto es Monofásico'
-                      when G.CantFase = '2' and G.CantFaseCodEstructura <> '2' then 'Codigo estructura incorrecto es Bifásico'
-                      when G.CantFase = '3' and G.CantFaseCodEstructura <> '3' then 'Codigo estructura incorrecto es Trifásico'
+                 case when G.CantFase = '1' and G.CantFaseCodEstructura <> '1' then 'Codigo estructura incorrecto es MonofÃ¡sico'
+                      when G.CantFase = '2' and G.CantFaseCodEstructura <> '2' then 'Codigo estructura incorrecto es BifÃ¡sico'
+                      when G.CantFase = '3' and G.CantFaseCodEstructura <> '3' then 'Codigo estructura incorrecto es TrifÃ¡sico'
                       else null
                  end FaseyCodigoEstructura,
                  case when G.subtipo = 1 and G.SubtipoCodEstructura <> 'S' then 'Codigo Estructura incorrecto Unipolar Abierto'
@@ -1013,9 +1013,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                        ps.voltaje,
                        ps.faseconexion,
                        case
-                         when FaseConexion in (1,2,4) then '1' --Monofásico
-                         when FaseConexion in (3,5,6) then '2' --Bifásico
-                         when FaseConexion = 7 then '3' --Trifásico
+                         when FaseConexion in (1,2,4) then '1' --MonofÃ¡sico
+                         when FaseConexion in (3,5,6) then '2' --BifÃ¡sico
+                         when FaseConexion = 7 then '3' --TrifÃ¡sico
                        end CantFase,
                        ps.codigoestructura,
                        c.descripcioncorta,
@@ -1051,9 +1051,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_SF_FaseConexionyUnidadFusi IS
   BEGIN
-    --Validación de la cantidad de unidades creadas en la tabla relacional, de acuerdo a la Fase de Conexion que tiene asiganada en el Puesto
+    --ValidaciÃ³n de la cantidad de unidades creadas en la tabla relacional, de acuerdo a la Fase de Conexion que tiene asiganada en el Puesto
 
-    Gv_DescERROR:= 'Cantidad de unidades (tabla relacional) de acuerdo a la Fase Conexión';
+    Gv_DescERROR:= 'Cantidad de unidades (tabla relacional) de acuerdo a la Fase ConexiÃ³n';
 
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro)
     SELECT 'ADMS',
@@ -1085,9 +1085,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                        psf.objectid,
                        psf.globalid,
                        case
-                         when psf.FaseConexion in (1,2,4) then '1' --Monofásico
-                         when psf.FaseConexion in (3,5,6) then '2' --Bifásico
-                         when psf.FaseConexion = 7 then '3' --Trifásico
+                         when psf.FaseConexion in (1,2,4) then '1' --MonofÃ¡sico
+                         when psf.FaseConexion in (3,5,6) then '2' --BifÃ¡sico
+                         when psf.FaseConexion = 7 then '3' --TrifÃ¡sico
                        end CantidadFase,
                        count(usf.objectid)                CantidadUnidad,
                        psf.usuarioregistro                usr_registro,
@@ -1116,7 +1116,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
  PROCEDURE P_V_SF_CapacidadConValorNULL IS
   BEGIN
-    --Validación de la Capacidad de la unidad fusible con el valor en NULL
+    --ValidaciÃ³n de la Capacidad de la unidad fusible con el valor en NULL
 
     Gv_DescERROR:= 'Capacidad en Unidad Fusible con valor NULL';
 
@@ -1163,9 +1163,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_CA_FaseConexionyUnidad IS
   BEGIN
-    --Validación de la cantidad de unidades creadas en la tabla relacional, de acuerdo a la Fase de Conexion que tiene asiganada en el Puesto
+    --ValidaciÃ³n de la cantidad de unidades creadas en la tabla relacional, de acuerdo a la Fase de Conexion que tiene asiganada en el Puesto
 
-    Gv_DescERROR:= 'Cantidad de Unidades (tabla relacional) de acuerdo a la Fase Conexión';
+    Gv_DescERROR:= 'Cantidad de Unidades (tabla relacional) de acuerdo a la Fase ConexiÃ³n';
 
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro)
     SELECT 'ADMS',
@@ -1198,9 +1198,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                        pc.objectid,
                        pc.globalid,
                        case
-                         when pc.FaseConexion in (1,2,4) then '1' --Monofásico
-                         when pc.FaseConexion in (3,5,6) then '2' --Bifásico
-                         when pc.FaseConexion = 7 then '3' --Trifásico
+                         when pc.FaseConexion in (1,2,4) then '1' --MonofÃ¡sico
+                         when pc.FaseConexion in (3,5,6) then '2' --BifÃ¡sico
+                         when pc.FaseConexion = 7 then '3' --TrifÃ¡sico
                        end CantidadFase,
                        count(uc.objectid) CantidadUnidad,
                        pc.usuarioregistro                    usr_registro, 
@@ -1229,7 +1229,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_CA_PotenciaUnidadyPuesto IS
   BEGIN
-    --Validación, Suma de la Potencia Nominal de las unidades deben ser igual a la Potencia kva del Puesto
+    --ValidaciÃ³n, Suma de la Potencia Nominal de las unidades deben ser igual a la Potencia kva del Puesto
 
     Gv_DescERROR:= 'Suma de Potencia en tabla relacional igual a la Potencia del Puesto';
 
@@ -1290,7 +1290,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_TM_ConductorConfySecFase IS
   BEGIN
-    --Validación Codigo de estructura (fase y neutro) y Configuracion de conductores con valor NULL y Secuencia Fase con el respectivo valor
+    --ValidaciÃ³n Codigo de estructura (fase y neutro) y Configuracion de conductores con valor NULL y Secuencia Fase con el respectivo valor
 
     Gv_DescERROR:= 'Codigo de Estructura, Configuracion de conductores y Secuencia de Fase';
 
@@ -1313,7 +1313,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                  tda.alimentadorid,
                  get_descripcion_alimentador(tda.alimentadorid) DescAlimentador,
                  tda.objectid,
-                 'Ingresar valor en Código Conductor Fase, configuración y secuencia de fase' Observacion,
+                 'Ingresar valor en CÃ³digo Conductor Fase, configuraciÃ³n y secuencia de fase' Observacion,
                  tda.usuarioregistro                    usr_registro, 
                  tda.fecharegistro                      fec_registro,
                  tda.usuariomodificacionregistro        usr_mod_registro,
@@ -1327,7 +1327,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                  tds.alimentadorid,
                  get_descripcion_alimentador(tds.alimentadorid) DescAlimentador,
                  tds.objectid,
-                 'Ingresar valor en Código Conductor Fase, configuración y secuencia de fase' Observacion,
+                 'Ingresar valor en CÃ³digo Conductor Fase, configuraciÃ³n y secuencia de fase' Observacion,
                  tds.usuarioregistro                    usr_registro, 
                  tds.fecharegistro                      fec_registro,
                  tds.usuariomodificacionregistro        usr_mod_registro,
@@ -1405,9 +1405,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
  PROCEDURE P_V_TM_ConductorFaseyVoltaje IS
   BEGIN
-    --Validación Código de estructura (fase y neutro), fase de conexion, voltaje y configuración de conductores
+    --ValidaciÃ³n CÃ³digo de estructura (fase y neutro), fase de conexion, voltaje y configuraciÃ³n de conductores
 
-    Gv_DescERROR:= 'Codigo Estructura, Fase de Conexion, Voltaje y Configuración de Conductores';
+    Gv_DescERROR:= 'Codigo Estructura, Fase de Conexion, Voltaje y ConfiguraciÃ³n de Conductores';
 
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro)
     SELECT 'ADMS',
@@ -1428,13 +1428,13 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                  G.objectid,
                  G.alimentadorid,
                  G.DescAlimentador,
-                 case when G.CantFase = 1 and G.Voltaje <> 7960 then 'Voltaje incorrecto es Monofásico'
-                      when G.CantFase in (2,3) and G.Voltaje <> 13800 then 'Voltaje incorrecto es Bifásico o Trifásico'
+                 case when G.CantFase = 1 and G.Voltaje <> 7960 then 'Voltaje incorrecto es MonofÃ¡sico'
+                      when G.CantFase in (2,3) and G.Voltaje <> 13800 then 'Voltaje incorrecto es BifÃ¡sico o TrifÃ¡sico'
                       else null
                  end FaseyVoltaje,
-                 case when G.CantFase = 1 and substr(G.configuracionconductores,1,1) <> '1' then 'Configuracion de Conductor incorrecto es Monofásico'
-                      when G.CantFase = 2 and substr(G.configuracionconductores,1,1) <> '2' then 'Configuracion de Conductor incorrecto es Bifásico'
-                      when G.CantFase = 3 and substr(G.configuracionconductores,1,1) <> '3' then 'Configuracion de Conductor incorrecto es Trifásico'
+                 case when G.CantFase = 1 and substr(G.configuracionconductores,1,1) <> '1' then 'Configuracion de Conductor incorrecto es MonofÃ¡sico'
+                      when G.CantFase = 2 and substr(G.configuracionconductores,1,1) <> '2' then 'Configuracion de Conductor incorrecto es BifÃ¡sico'
+                      when G.CantFase = 3 and substr(G.configuracionconductores,1,1) <> '3' then 'Configuracion de Conductor incorrecto es TrifÃ¡sico'
                       else null
                  end FaseyConfiguracionConductor,
                  case when G.CantNeutro = 0 and to_number(substr(G.configuracionconductores,2,1)) <> G.CantFase then 'Configuracion de Conductor incorrecto no tiene Neutro'
@@ -1451,9 +1451,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                        tda.alimentadorid,
                        get_descripcion_alimentador(tda.alimentadorid) DescAlimentador,
                        case
-                         when tda.FaseConexion in (1,2,4) then 1 --Monofásico
-                         when tda.FaseConexion in (3,5,6) then 2 --Bifásico
-                         when tda.FaseConexion = 7 then 3 --Trifásico
+                         when tda.FaseConexion in (1,2,4) then 1 --MonofÃ¡sico
+                         when tda.FaseConexion in (3,5,6) then 2 --BifÃ¡sico
+                         when tda.FaseConexion = 7 then 3 --TrifÃ¡sico
                            else 0
                        end CantFase,
                        tda.voltaje,
@@ -1486,12 +1486,12 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                               ta.objectid,
                               ta.subtipo,
                               case
-                                   when ta.subtipo = 1 then 'Tramo MTA Monofásico'
-                                   when ta.subtipo = 2 then 'Tramo MTA Bifásico'
-                                   when ta.subtipo = 3 then 'Tramo MTA Trifásico'
-                                   when ta.subtipo = 4 then 'Bajante MTA Monofásico'
-                                   when ta.subtipo = 5 then 'Bajante MTA Bifásico'
-                                   when ta.subtipo = 6 then 'Bajante MTA Trifásico'
+                                   when ta.subtipo = 1 then 'Tramo MTA MonofÃ¡sico'
+                                   when ta.subtipo = 2 then 'Tramo MTA BifÃ¡sico'
+                                   when ta.subtipo = 3 then 'Tramo MTA TrifÃ¡sico'
+                                   when ta.subtipo = 4 then 'Bajante MTA MonofÃ¡sico'
+                                   when ta.subtipo = 5 then 'Bajante MTA BifÃ¡sico'
+                                   when ta.subtipo = 6 then 'Bajante MTA TrifÃ¡sico'
                               end DescSubtipo,
                               ta.alimentadorid,
                               ta.alimentadorinfo,
@@ -1510,12 +1510,12 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                               ts.objectid,
                               ts.subtipo,
                               case
-                                   when ts.subtipo = 1 then 'Tramo MTS Monofásico'
-                                   when ts.subtipo = 2 then 'Tramo MTS Bifásico'
-                                   when ts.subtipo = 3 then 'Tramo MTS Trifásico'
-                                   when ts.subtipo = 4 then 'Bajante MTS Monofásico'
-                                   when ts.subtipo = 5 then 'Bajante MTS Bifásico'
-                                   when ts.subtipo = 6 then 'Bajante MTS Trifásico'
+                                   when ts.subtipo = 1 then 'Tramo MTS MonofÃ¡sico'
+                                   when ts.subtipo = 2 then 'Tramo MTS BifÃ¡sico'
+                                   when ts.subtipo = 3 then 'Tramo MTS TrifÃ¡sico'
+                                   when ts.subtipo = 4 then 'Bajante MTS MonofÃ¡sico'
+                                   when ts.subtipo = 5 then 'Bajante MTS BifÃ¡sico'
+                                   when ts.subtipo = 6 then 'Bajante MTS TrifÃ¡sico'
                               end DescSubtipo,
                               ts.alimentadorid,
                               ts.alimentadorinfo,
@@ -1558,16 +1558,16 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_PD_CorrienteFaseyVoltaje IS
   BEGIN
-    --Validación de Corriente, Corriente Maxima, Fase conexion y Voltaje
+    --ValidaciÃ³n de Corriente, Corriente Maxima, Fase conexion y Voltaje
 
-    Gv_DescERROR:= 'Corriente, Corriente Máxima, Fase Conexion y Voltaje con valor NULL';
+    Gv_DescERROR:= 'Corriente, Corriente MÃ¡xima, Fase Conexion y Voltaje con valor NULL';
 
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro)
     SELECT 'ADMS',
            Gv_DescERROR,
            F.alimentadorid,
            F.DescAlimentador,
-           'Puesto Proteccion Dinámico',
+           'Puesto Proteccion DinÃ¡mico',
            F.objectid,
            F.Corriente || ';' || F.CorrienteMaxCC,
            F.FaseConexion || ';' || F.Voltaje,
@@ -1580,10 +1580,10 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
           select ppd.alimentadorid,
                  get_descripcion_alimentador(ppd.alimentadorid) DescAlimentador,
                  ppd.objectid,
-                 case when ppd.corriente is NULL then 'Valor de Corriente inválido' else '' end Corriente,
-                 case when ppd.corrientemaxcortocircuito is NULL then 'Valor de Corriente Max Corto Circuito inválido' else '' end CorrienteMaxCC,
+                 case when ppd.corriente is NULL then 'Valor de Corriente invÃ¡lido' else '' end Corriente,
+                 case when ppd.corrientemaxcortocircuito is NULL then 'Valor de Corriente Max Corto Circuito invÃ¡lido' else '' end CorrienteMaxCC,
                  case when ppd.faseconexion is NULL then 'No tiene Fase especificada' else '' end FaseConexion,
-                 case when ppd.voltaje is NULL then 'Valor de Voltaje inválido' else '' end Voltaje,
+                 case when ppd.voltaje is NULL then 'Valor de Voltaje invÃ¡lido' else '' end Voltaje,
                  ppd.usuarioregistro              usr_registro, 
                  ppd.fecharegistro                fec_registro, 
                  ppd.usuariomodificacionregistro  usr_mod_registro,
@@ -1608,9 +1608,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_PT_NTapsyConfLadoBajaMedia IS
   BEGIN
-    --Validación de Numero de Taps válido (1-5) y Configuración Lado Baja o Media
+    --ValidaciÃ³n de Numero de Taps vÃ¡lido (1-5) y ConfiguraciÃ³n Lado Baja o Media
 
-    Gv_DescERROR:= 'Número de Taps y Configuración Lado Baja-Media';
+    Gv_DescERROR:= 'NÃºmero de Taps y ConfiguraciÃ³n Lado Baja-Media';
 
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro)
     SELECT 'ADMS',
@@ -1643,7 +1643,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
           select pt.alimentadorid,
                  get_descripcion_alimentador(pt.AlimentadorID),
                  pt.objectid,
-                 'Configuración lado baja ó media, vacío',
+                 'ConfiguraciÃ³n lado baja Ã³ media, vacÃ­o',
                  pt.usuarioregistro               usr_registro, 
                  pt.fecharegistro                 fec_registro, 
                  pt.usuariomodificacionregistro   usr_mod_registro,
@@ -1667,7 +1667,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_PT_UnidadySubtipo IS
   BEGIN
-    --Validación de la cantidad de unidades de acuerdo al subtipo del Transformador
+    --ValidaciÃ³n de la cantidad de unidades de acuerdo al subtipo del Transformador
 
     Gv_DescERROR:= 'Cantidad de Unidades (tabla relacional) de acuerdo al Subtipo del Transformador';
 
@@ -1780,9 +1780,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
   PROCEDURE P_V_PT_FaseConexPuestoyUnidad IS
 
   BEGIN
-    --Validación Fase de Conexion del Puesto con la Unidad
+    --ValidaciÃ³n Fase de Conexion del Puesto con la Unidad
 
-    Gv_DescERROR:= 'Fase de Conexión del Puesto y la Unidad deben coincidir';
+    Gv_DescERROR:= 'Fase de ConexiÃ³n del Puesto y la Unidad deben coincidir';
 
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro)
     SELECT 'ADMS',
@@ -1791,7 +1791,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
            F.DescAlimentador,
            'Puesto Transformador',
            F.objectid,
-           F.Subtipo || ' no coinciden Fase de Conexión, Puesto=' || F.FaseConexionPTDesc  || '  Unidad=' || F.FaseConexionUTDesc,
+           F.Subtipo || ' no coinciden Fase de ConexiÃ³n, Puesto=' || F.FaseConexionPTDesc  || '  Unidad=' || F.FaseConexionUTDesc,
            F.Nota,
            TRUNC(sysdate),
            F.usr_registro,
@@ -1836,9 +1836,9 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
                 select pt.subtipo,
                        pt.objectid,
                        nvl(pt.FaseConexion,0)      FaseConexionPT,
-                       case when pt.FaseConexion in (1,2,4) then 1 --Monofásico
-                            when pt.FaseConexion in (3,5,6) then 2 --Bifásico
-                            when pt.FaseConexion = 7 then 3 --Trifásico
+                       case when pt.FaseConexion in (1,2,4) then 1 --MonofÃ¡sico
+                            when pt.FaseConexion in (3,5,6) then 2 --BifÃ¡sico
+                            when pt.FaseConexion = 7 then 3 --TrifÃ¡sico
                             else 0
                        end CantFasePuesto,
                        sum(nvl(ut.FaseConexion,0)) FaseConexionUT,
@@ -1871,10 +1871,10 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_PT_FaseConexionBancoTR IS
   BEGIN
-    --Validación para verificación de la Fase de conexión del Puesto con la Fase de la Unidad,
-    --para el caso de los Bancos Transformadores que tienen más de 1 unidad
+    --ValidaciÃ³n para verificaciÃ³n de la Fase de conexiÃ³n del Puesto con la Fase de la Unidad,
+    --para el caso de los Bancos Transformadores que tienen mÃ¡s de 1 unidad
 
-    Gv_DescERROR:= 'Fase Conexión del Puesto y la Unidad para Banco Transformador';
+    Gv_DescERROR:= 'Fase ConexiÃ³n del Puesto y la Unidad para Banco Transformador';
 
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro)
     SELECT 'ADMS',
@@ -1952,7 +1952,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
   PROCEDURE P_V_PT_PotenciaUnidadyPuesto IS
   BEGIN
-    --Validación, Suma de la Potencia Nominal de las unidades deben ser igual a la Potencia kva del Puesto
+    --ValidaciÃ³n, Suma de la Potencia Nominal de las unidades deben ser igual a la Potencia kva del Puesto
 
     Gv_DescERROR:= 'Suma de Potencia en tabla relacional igual a la Potencia del Puesto';
 
@@ -2013,7 +2013,7 @@ PROCEDURE P_V_SF_FaseEstrucVoltCorr IS
 
 PROCEDURE P_V_CC_CodigoClienteRepetido IS
   BEGIN
-    --Validación de Cuentas Repetidas
+    --ValidaciÃ³n de Cuentas Repetidas
 
     Gv_DescERROR:= 'Cuentas Repetidas';
 
@@ -2075,7 +2075,7 @@ PROCEDURE P_V_CC_CodigoClienteRepetido IS
 
 PROCEDURE P_V_CC_CodigoUnicoRepetido IS
   BEGIN
-    --Validación de Cuentas Repetidas
+    --ValidaciÃ³n de Cuentas Repetidas
 
     Gv_DescERROR:= 'Cuentas Repetidas';
 
@@ -2139,9 +2139,9 @@ PROCEDURE P_V_CC_CodigoUnicoRepetido IS
 
   PROCEDURE P_V_CC_ConCodClienteSinMedidor IS
   BEGIN    
-    --Validación de Conexion Consumidor con Código de Cliente y sin Número de Medidor
+    --ValidaciÃ³n de Conexion Consumidor con CÃ³digo de Cliente y sin NÃºmero de Medidor
      
-    Gv_DescERROR:= 'Con Código de Cliente y sin Número de Medidor en AtributosConsumidor';
+    Gv_DescERROR:= 'Con CÃ³digo de Cliente y sin NÃºmero de Medidor en AtributosConsumidor';
   
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro) 
     SELECT 'ADMS',
@@ -2191,9 +2191,9 @@ PROCEDURE P_V_CC_CodigoUnicoRepetido IS
   
   PROCEDURE P_V_CC_SinCodClienteConMedidor IS
   BEGIN    
-    --Validación de Conexion Consumidor sin Codigo de Cliente y con Número de Medidor
+    --ValidaciÃ³n de Conexion Consumidor sin Codigo de Cliente y con NÃºmero de Medidor
      
-    Gv_DescERROR:= 'Sin Código de Cliente en Conexion Consumidor';
+    Gv_DescERROR:= 'Sin CÃ³digo de Cliente en Conexion Consumidor';
   
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro) 
     SELECT 'ADMS',
@@ -2233,9 +2233,9 @@ PROCEDURE P_V_CC_CodigoUnicoRepetido IS
 
   PROCEDURE P_V_CC_SinCodClienteSinMedidor IS
   BEGIN    
-    --Validación de Conexion Consumidor sin Codigo de Cliente y con Número de Medidor
+    --ValidaciÃ³n de Conexion Consumidor sin Codigo de Cliente y con NÃºmero de Medidor
      
-    Gv_DescERROR:= 'Sin Código de Cliente y sin Número de Medidor en Conexion Consumidor';
+    Gv_DescERROR:= 'Sin CÃ³digo de Cliente y sin NÃºmero de Medidor en Conexion Consumidor';
   
     INSERT INTO VALIDAERROR(tipoerror, descerror, alimentadorid, descalimentador, elemento, objectid, datoadicional1, datoadicional2, fechavalidacion, usr_registro,  fec_registro, usr_mod_registro, fec_mod_registro) 
     SELECT 'ADMS',
