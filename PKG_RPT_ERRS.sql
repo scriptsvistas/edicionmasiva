@@ -2,7 +2,7 @@ CREATE OR REPLACE PACKAGE                   PKG_RPT_ERRS is
  
   -- Author  : SCASTILLO 
   -- Created : 04/02/2015
-  -- Subir 2  
+  -- Subir 4  
      
   TYPE Tr_Columnas_ValError IS RECORD(
     tipoerror           NVARCHAR2(15),
