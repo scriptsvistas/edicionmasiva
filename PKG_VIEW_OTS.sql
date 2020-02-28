@@ -2,7 +2,7 @@ CREATE OR REPLACE PACKAGE PKG_VIEW_OTS AS
 
   PROCEDURE P_A_Principal;
   /* TODO enter package declarations (types, exceptions, methods etc) here */ 
- 
+  --- se modifico algo aq
 END PKG_VIEW_OTS;
 /
 
